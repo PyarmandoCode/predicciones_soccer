@@ -1,17 +1,4 @@
 services:
-  db:
-    image: postgres:13
-    environment:
-      POSTGRES_DB: scholl_db
-      POSTGRES_USER: scholl_user
-      POSTGRES_PASSWORD: scholl_password
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"  # Agregado para exponer el puerto 5432 de PostgreSQL
-    networks:
-      - backend
-
   web:
     build: .
     command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
@@ -21,11 +8,13 @@ services:
       - "8000:8000"
     depends_on:
       - db
+    environment:
+      - POSTGRES_DB=scholl_db
+      - POSTGRES_USER=scholl_user
+      - POSTGRES_PASSWORD=scholl_password
+      - DB_HOST=db        # ✅ importante
+      - DB_PORT=5432
     networks:
       - backend
 
-volumes:
-  postgres_data:
 
-networks:
-  backend:
