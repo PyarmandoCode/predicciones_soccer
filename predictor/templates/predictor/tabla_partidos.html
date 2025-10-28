@@ -1,0 +1,95 @@
+<div class="table-container p-3 shadow-sm rounded">
+  <table class="table table-hover text-center align-middle mb-0">
+    <thead class="table-head">
+      <tr>
+        <th scope="col">Fecha</th>
+        <th scope="col">Partido</th>
+        <th scope="col">Competición</th>
+        <th scope="col">🏠 Local</th>
+        <th scope="col">🤝 Empate</th>
+        <th scope="col">🚀 Visitante</th>
+        <th scope="col">Resultado probable</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for it in items %}
+      <tr>
+        <td class="text-cell">{{ it.match.date|date:"d/m/Y H:i" }}</td>
+        <td class="text-cell"><strong>{{ it.match.home_team.name }}</strong> vs <strong>{{ it.match.away_team.name }}</strong></td>
+        <td class="text-cell">{{ it.match.competition }}</td>
+        <td class="{{ it.classes.home_class }}">{{ it.probs.home_win|floatformat:2 }}</td>
+        <td class="{{ it.classes.draw_class }}">{{ it.probs.draw|floatformat:2 }}</td>
+        <td class="{{ it.classes.away_class }}">{{ it.probs.away_win|floatformat:2 }}</td>
+        <td><span class="badge bg-primary">{{ it.probs.most_likely_score.0 }} - {{ it.probs.most_likely_score.1 }}</span></td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="7" class="text-muted">No hay partidos programados.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<style>
+    .table-container {
+    background-color: rgba(0, 31, 63, 0.95); /* fondo oscuro profesional */
+    border-radius: 0.5rem;
+    padding: 1rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+    transition: background 0.3s;
+    }
+
+    /* Encabezado */
+    .table-head th {
+    background-color: #1a2b4c;
+    color: #ffffff;
+    font-weight: 500;
+    text-transform: uppercase;
+    padding: 0.6rem 1rem;
+    letter-spacing: 0.3px;
+    }
+
+    /* Filas */
+    .table-container tbody tr {
+    background-color: rgba(30, 50, 90, 0.8);
+    transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .table-container tbody tr:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    }
+
+    /* Primeras 3 columnas legibles */
+    .table-container tbody td.text-cell {
+    color: #111; /* gris oscuro elegante sobre fondo azul */
+    font-weight: 400;
+    }
+
+    /* Badges y probabilidades sin cambios */
+    .table-container .badge {
+    font-weight: 500;
+    }
+
+    /* === MODO CLARO === */
+    body.light-mode .table-container {
+    background-color: #fff;
+    }
+
+    body.light-mode .table-head th {
+    background-color: #dee2e6;
+    color: #111; /* negro en encabezado */
+    }
+
+    body.light-mode .table-container tbody tr {
+    background-color: #f8f9fa;
+    }
+
+    body.light-mode .table-container tbody tr:hover {
+    background-color: #e9ecef;
+    }
+
+    body.light-mode .table-container tbody td.text-cell {
+    color: #111; /* negro en modo claro */
+    }
+</style>
