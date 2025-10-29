@@ -1,21 +1,30 @@
-# Usar una imagen base oficial de Python
-FROM python:3.10
+# Imagen base oficial de Python
+FROM python:3.10-slim
 
-# Configurar el directorio de trabajo
+ENV DEBIAN_FRONTEND=noninteractive
+
 WORKDIR /app
 
-# Copiar solo requirements primero
+# Instalar dependencias necesarias
+RUN apt-get update && apt-get install -y \
+    netcat-openbsd \
+    gcc \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copiar requirements primero
 COPY requirements.txt .
 
-# Instalar pip y actualizar
 RUN pip install --no-cache-dir --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copiar el resto del proyecto
 COPY . .
 
-# Exponer el puerto 8000 para Django
+# Dar permisos al script
+RUN chmod +x /app/entrypoint.sh
+
 EXPOSE 8000
 
-# Comando para ejecutar el servidor de Django
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Usar el script como punto de entrada
+ENTRYPOINT ["/app/entrypoint.sh"]

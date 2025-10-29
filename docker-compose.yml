@@ -3,6 +3,7 @@ version: "3.9"
 services:
   db:
     image: postgres:13
+    container_name: scholl_db
     environment:
       POSTGRES_DB: scholl_db
       POSTGRES_USER: scholl_user
@@ -16,6 +17,7 @@ services:
 
   web:
     build: .
+    container_name: scholl_web
     command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
     volumes:
       - .:/app
@@ -24,11 +26,17 @@ services:
     depends_on:
       - db
     environment:
+      # Configuración base de datos
       POSTGRES_DB: scholl_db
       POSTGRES_USER: scholl_user
       POSTGRES_PASSWORD: scholl_password
       DB_HOST: db
       DB_PORT: 5432
+
+      # Datos del superusuario automático
+      DJANGO_SUPERUSER_USERNAME: admin
+      DJANGO_SUPERUSER_EMAIL: admin@example.com
+      DJANGO_SUPERUSER_PASSWORD: admin123
     networks:
       - backend
 
